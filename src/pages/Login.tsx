@@ -12,7 +12,7 @@ const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
   console.log("Success:", values);
 };
 
-export const LoginPage = () => {
+const LoginPage = () => {
   return (
     <Row className="h-screen items-center">
       <Col span={14} className="flex h-screen items-center justify-center bg-blue-500">
@@ -70,3 +70,4 @@ export const LoginPage = () => {
     </Row>
   );
 };
+export default LoginPage;

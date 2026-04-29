@@ -16,9 +16,14 @@
     "@tailwindcss/vite": "^4.2.4",
     "antd": "^6.3.7",
     "antd-style": "^4.1.0",
+    "axios": "^1.15.2",
+    "jwt-decode": "^4.0.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
-    "react-router-dom": "^7.14.2"
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.14.2",
+    "redux-persist": "^6.0.0",
+    "rxjs": "^7.8.2"
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",

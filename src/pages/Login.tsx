@@ -1,20 +1,5 @@
-import {
-  Button,
-  Checkbox,
-  Col,
-  Divider,
-  Form,
-  Image,
-  Input,
-  Row,
-  Typography,
-} from "antd";
-import {
-  LockOutlined,
-  UserOutlined,
-  EyeInvisibleOutlined,
-  EyeTwoTone,
-} from "@ant-design/icons";
+import { Button, Checkbox, Col, Divider, Form, Image, Input, Row, Typography } from "antd";
+import { LockOutlined, UserOutlined, EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import logo from "../assets/logo.png";
 import logo_1 from "../assets/logo_1.png";
 const { Title, Text, Link } = Typography;
@@ -25,7 +10,7 @@ const LoginPage = () => {
       <Row className="h-full">
         {/* LEFT SIDE */}
         <Col
-        span={12}
+          span={12}
           className="relative flex h-full items-center justify-center overflow-hidden bg-gradient-to-b from-[#0052cc] to-[#003b99]"
         >
           {/* background */}
@@ -40,39 +25,24 @@ const LoginPage = () => {
           </div>
 
           <div className="z-10 text-center text-white">
-            <Image
-              preview={false}
-              width={260}
-              src={logo_1}
-            />
+            <Image preview={false} width={260} src={logo_1} />
 
             <Title level={1} className="!mt-8 !mb-3 !text-white">
               HR Management System
             </Title>
 
-            <p className="text-lg text-white/90">
-              Quản trị nhân sự hiệu quả
-            </p>
+            <p className="text-lg text-white/90">Quản trị nhân sự hiệu quả</p>
 
-            <p className="text-lg text-white/90">
-              Phát triển tổ chức bền vững
-            </p>
+            <p className="text-lg text-white/90">Phát triển tổ chức bền vững</p>
           </div>
         </Col>
 
         {/* RIGHT SIDE */}
-        <Col
-        span={12}
-          className="flex h-full items-center justify-center px-10"
-        >
-          <div className="w-full h-full bg-white p-12 shadow-2xl">
+        <Col span={12} className="flex h-full items-center justify-center px-10">
+          <div className="h-full w-full bg-white p-12 shadow-2xl">
             {/* LOGO */}
             <div className="mb-8 flex justify-center">
-              <Image
-                preview={false}
-                width={180}
-                src={logo}
-              />
+              <Image preview={false} width={180} src={logo} />
             </div>
 
             {/* TITLE */}
@@ -81,15 +51,16 @@ const LoginPage = () => {
                 Đăng nhập
               </Title>
 
-              <Text className="text-[16px] text-gray-500">
-                Chào mừng bạn quay trở lại!
-              </Text>
+              <Text className="text-[16px] text-gray-500">Chào mừng bạn quay trở lại!</Text>
             </div>
 
             {/* FORM */}
-            <Form layout="vertical" style={{
-              padding:24
-            }}>
+            <Form
+              layout="vertical"
+              style={{
+                padding: 24,
+              }}
+            >
               <Form.Item
                 label="Tên đăng nhập"
                 name="username"
@@ -123,9 +94,7 @@ const LoginPage = () => {
                   prefix={<LockOutlined />}
                   placeholder="Nhập mật khẩu"
                   className="!h-[52px] rounded-xl"
-                  iconRender={(visible) =>
-                    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                  }
+                  iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                 />
               </Form.Item>
 
@@ -150,11 +119,7 @@ const LoginPage = () => {
               <Divider>hoặc</Divider>
 
               {/* microsoft */}
-              <Button
-                block
-                size="large"
-                className="!h-[52px] rounded-xl"
-              >
+              <Button block size="large" className="!h-[52px] rounded-xl">
                 <div className="flex items-center justify-center gap-3">
                   <img
                     src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg"

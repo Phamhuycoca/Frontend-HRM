@@ -10,23 +10,29 @@ import {
     Button,
     Space
 } from 'antd';
+import type { ColumnsType, TableProps } from 'antd/es/table';
 import type {
-    ColumnsType,
+    SorterResult,
     TablePaginationConfig
-} from 'antd/es/table';
-import type { SorterResult } from 'antd/es/table/interface';
+} from 'antd/es/table/interface';
 import { Icon } from '../Icon';
+
+/* ================= TYPES ================= */
 
 type SortOption = Record<string, 1 | -1>;
 
-type HandleChangeParams = {
+interface HandleChangeParams {
     search?: string;
     page?: number;
     page_size?: number;
     sort?: SortOption;
-};
+}
 
-export interface BaseTableProps<T> {
+/**
+ * 🔥 FIX: Omit pagination của Antd
+ */
+export interface TableViewProps<T>
+    extends Omit<TableProps<T>, 'pagination'> {
     loading?: boolean;
     className?: string;
     hasSearch?: boolean;
@@ -43,17 +49,22 @@ export interface BaseTableProps<T> {
     columns?: ColumnsType<T>;
     handleChange?: (params: HandleChangeParams) => void;
 
-    expandable?: any;
-    pagination?: boolean;
-    searchSpan?: number;
+    expandable?: TableProps<T>['expandable'];
 
-    dataSource?: T[];
+    /** 🔥 dùng riêng của bạn */
+    enablePagination?: boolean;
+
+    searchSpan?: number;
 }
+
+/* ================= CONSTANT ================= */
 
 const SortType: Record<string, 'ascend' | 'descend'> = {
     '1': 'ascend',
     '-1': 'descend'
 };
+
+/* ================= UTILS ================= */
 
 const UpdateColumnsSort = <T,>(
     columns: ColumnsType<T> = [],
@@ -74,7 +85,9 @@ const UpdateColumnsSort = <T,>(
     });
 };
 
-export const BaseTable = <T extends object>(props: BaseTableProps<T>) => {
+/* ================= COMPONENT ================= */
+
+export const TableView = <T extends object>(props: TableViewProps<T>) => {
     const {
         loading,
         className,
@@ -90,9 +103,8 @@ export const BaseTable = <T extends object>(props: BaseTableProps<T>) => {
         columns = [],
         handleChange,
         expandable,
-        pagination = true,
+        enablePagination = true, // 🔥 fix
         searchSpan,
-        dataSource,
         ...rest
     } = props;
 
@@ -104,10 +116,12 @@ export const BaseTable = <T extends object>(props: BaseTableProps<T>) => {
     const [sortOption, setSortOption] = useState<SortOption>(sort);
     const [cols, setCols] = useState<ColumnsType<T>>([]);
 
+    /* ===== update columns sort ===== */
     useEffect(() => {
         setCols(UpdateColumnsSort(columns, sortOption));
     }, [columns, sortOption]);
 
+    /* ===== sync props ===== */
     useEffect(() => {
         if (totalRecord !== total) setTotalRecord(total);
         if (currentPage !== page) setCurrentPage(page);
@@ -115,6 +129,7 @@ export const BaseTable = <T extends object>(props: BaseTableProps<T>) => {
         if (keySearch !== search) setKeySearch(search);
     }, [page, page_size, total, search]);
 
+    /* ===== emit change ===== */
     useEffect(() => {
         handleChange?.({
             search: keySearch,
@@ -123,6 +138,8 @@ export const BaseTable = <T extends object>(props: BaseTableProps<T>) => {
             sort: sortOption
         });
     }, [keySearch, pageSize, currentPage, sortOption]);
+
+    /* ===== handlers ===== */
 
     const onChangePage = (page: number) => {
         setCurrentPage(page);
@@ -166,35 +183,39 @@ export const BaseTable = <T extends object>(props: BaseTableProps<T>) => {
         setKeySearch(e.target.value);
     };
 
+    /* ================= RENDER ================= */
+
     return (
         <Spin spinning={loading}>
             <Row gutter={[16, 16]} className={['grid-view', className].join(' ')}>
-                <Col span={24} className='grid-header'>
+                <Col span={24} className="grid-header">
                     <Row gutter={[16, 16]}>
                         {hasSearch && (
                             <Col xs={{ span: 24, order: 2 }} md={{ span: searchSpan ?? 10, order: 1 }}>
                                 <Input.Search
                                     addonAfter={
-                                        AdvanceFilter && (
+                                        AdvanceFilter ? (
                                             <Button
+                                                className="btn-adv-search"
                                                 type="link"
-                                                onClick={() =>
-                                                    setIsAdvSearchOpen(!isAdvSearchOpen)
-                                                }
+                                                onClick={() => setIsAdvSearchOpen(!isAdvSearchOpen)}
                                             >
                                                 <Space>
                                                     Tìm kiếm nâng cao
-                                                    <Icon icon={
-                                                        isAdvSearchOpen
-                                                            ? 'ant-design:down-outlined'
-                                                            : 'ant-design:up-outlined'
-                                                    } />
+                                                    <Icon
+                                                        icon={
+                                                            isAdvSearchOpen
+                                                                ? 'ant-design:down-outlined'
+                                                                : 'ant-design:up-outlined'
+                                                        }
+                                                    />
                                                 </Space>
                                             </Button>
-                                        )
+                                        ) : null
                                     }
+                                    className="search"
                                     defaultValue={keySearch}
-                                    onSearch={setKeySearch}
+                                    onSearch={(val) => setKeySearch(val)}
                                     onBlur={onChangeSearch}
                                     placeholder="Tìm kiếm nhanh"
                                     allowClear
@@ -203,39 +224,79 @@ export const BaseTable = <T extends object>(props: BaseTableProps<T>) => {
                         )}
 
                         {ActionBar && (
-                            <Col span={24}>
-                                {ActionBar}
+                            <Col
+                                xs={{ span: 24, order: 1 }}
+                                md={{
+                                    span: hasSearch
+                                        ? searchSpan
+                                            ? 24 - searchSpan
+                                            : 14
+                                        : 24,
+                                    order: 2
+                                }}
+                                className="grid-view-action-bar"
+                            >
+                                <div className="float-sm-end">{ActionBar}</div>
                             </Col>
                         )}
 
                         {isAdvSearchOpen && (
-                            <Col span={24}>
-                                {AdvanceFilter}
+                            <Col span={24} order={3} className="filter-adv-container">
+                                <fieldset>
+                                    <legend>Tham số tìm kiếm</legend>
+                                    {AdvanceFilter}
+                                </fieldset>
                             </Col>
                         )}
                     </Row>
                 </Col>
 
-                <Col span={24}>
+                <Col span={24} className="grid-table">
                     <Table<T>
                         {...rest}
                         columns={cols}
-                        dataSource={dataSource}
                         onChange={handleTableChange}
                         pagination={false}
                         size="small"
                         expandable={expandable}
-                        rowKey="id"
                     />
                 </Col>
 
-                {pagination && (
-                    <Col span={24}>
+                {enablePagination && (
+                    <Col span={24} className="grid-pagination">
+                        <div className="d-none d-sm-flex">
+                            {pageSize > 0 && (
+                                <div className="select-page-size">
+                                    Hiển thị{' '}
+                                    <Select
+                                        size="small"
+                                        className="change-page-size"
+                                        defaultValue={pageSize}
+                                        onChange={onChangePageSize}
+                                        showSearch
+                                        options={[
+                                            { value: 10, label: '10 / trang' },
+                                            { value: 20, label: '20 / trang' },
+                                            { value: 50, label: '50 / trang' },
+                                            { value: 100, label: '100 / trang' }
+                                        ]}
+                                    />
+                                </div>
+                            )}
+                        </div>
+
                         <Pagination
+                            className="float-end justify-content-center"
                             total={totalRecord}
-                            pageSize={pageSize}
+                            pageSize={pageSize > 0 ? pageSize : totalRecord}
                             current={currentPage}
                             onChange={onChangePage}
+                            simple
+                            showTotal={(total, range) => (
+                                <span>
+                                    {range[0]} - {range[1]} trong số {total}
+                                </span>
+                            )}
                         />
                     </Col>
                 )}

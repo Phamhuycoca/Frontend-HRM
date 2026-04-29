@@ -8,7 +8,7 @@ const Routers: IRouter[] = [
   },
   {
     path: "/admin",
-    component: loadable(() => import("@/component/layout/Admin"))
-  }
+    component: loadable(() => import("@/component/layout/Admin")),
+  },
 ];
 export default Routers;

@@ -154,7 +154,7 @@ export const TableView = <T extends object>(props: TableViewProps<T>) => {
 
     const handleTableChange = (
         pagination: TablePaginationConfig,
-        filters: any,
+        // filters: any,
         sorter: SorterResult<T> | SorterResult<T>[]
     ) => {
         if (pagination.current !== currentPage) {

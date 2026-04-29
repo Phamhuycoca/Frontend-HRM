@@ -31,13 +31,13 @@ export interface BaseModalProps<T> {
     width?: number;
 }
 
-export function BaseModal<T>({
+export const BaseModal = <T extends Record<string, unknown>>({
     title,
     service,
     onSubmit,
     children,
     width = 800,
-}: BaseModalProps<T>) {
+}: BaseModalProps<T>) => {
     const [form] = Form.useForm<T>();
 
     const [state, setState] = useState<ModalState<T>>({

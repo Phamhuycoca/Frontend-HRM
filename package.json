@@ -12,6 +12,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@iconify/react": "^6.0.2",
     "@reduxjs/toolkit": "^2.11.2",
     "@tailwindcss/vite": "^4.2.4",
     "antd": "^6.3.7",

@@ -3,11 +3,11 @@ import { loadable } from "@/utils/loadable";
 
 const Routers: IRouter[] = [
   {
-    path: "/",
-    component: loadable(() => import("@/pages/Login")),
+    path: "/auth-callback",
+    component: loadable(() => import("@/pages/AuthCallback")),
   },
   {
-    path: "/admin",
+    path: "/",
     component: loadable(() => import("@/component/layout/Admin")),
   },
 ];
